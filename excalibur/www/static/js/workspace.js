@@ -188,6 +188,10 @@ const getRuleOptions = function () {
         ruleOptions['flag_size'] = $("#flag-size-s").val() ? true : false;
         break;
       }
+      case 'extracttables': {
+        ruleOptions['api-key'] = $('#api-key').val();
+        break;
+      }
       default: {
         break;
       }
@@ -293,11 +297,18 @@ const onFlavorChange = function () {
   if (flavor == 'Lattice') {
     $('.stream').hide();
     $('.lattice').show();
+    $('.extracttables').hide();
     $('.add-separator').prop('disabled', true);
-  } else {
+  } else if (flavor == 'Stream') {
     $('.stream').show();
     $('.lattice').hide();
+    $('.extracttables').hide();
     $('.add-separator').prop('disabled', false);
+  } else if (flavor == 'Extracttables') {
+    $('.stream').hide();
+    $('.lattice').hide();
+    $('.extracttables').show();
+    $('.add-separator').prop('disabled', true);
   }
 };
 

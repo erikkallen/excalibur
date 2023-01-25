@@ -60,6 +60,7 @@ def webserver(*args, **kwargs):
         port=conf.get("webserver", "web_server_port"),
         host=conf.get("webserver", "web_server_host"),
         use_reloader=False,
+        debug=True
     )
 
 

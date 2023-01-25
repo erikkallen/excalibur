@@ -14,7 +14,7 @@ from flask import (
     render_template,
     send_from_directory,
 )
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 from .. import configuration as conf
 from ..models import Job, File, Rule
@@ -260,5 +260,5 @@ def download():
     directory = os.path.join(os.getcwd(), datapath)
     filename = os.path.basename(zipfile)
     return send_from_directory(
-        directory=directory, filename=filename, as_attachment=True
+        directory=directory, path=filename, as_attachment=True
     )

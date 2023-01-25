@@ -6,6 +6,7 @@ import datetime as dt
 
 from camelot.core import TableList
 from camelot.parsers import Stream, Lattice
+from .parsers import Extracttables
 from camelot.ext.ghostscript import Ghostscript
 
 from . import configuration as conf
@@ -102,15 +103,24 @@ def extract(job_id):
         flavor = rule_options.pop("flavor")
         pages = rule_options.pop("pages")
 
+        logging.info(f"Extract {flavor} {pages}")
+        print(f"Extract {flavor} {pages} {rule_options}")
         tables = []
         filepaths = json.loads(file.filepaths)
+
+        print(f"Files {filepaths}")
         for p in pages:
             kwargs = pages[p]
             kwargs.update(rule_options)
-            parser = (
-                Lattice(**kwargs) if flavor.lower() == "lattice" else Stream(**kwargs)
-            )
+            parser = None
+            if flavor.lower() == "lattice":
+                parser = Lattice(**kwargs) 
+            elif flavor.lower() == "stream":
+                parser = Stream(**kwargs)
+            elif flavor.lower() == "extracttables":
+                parser = Extracttables(**kwargs)
             t = parser.extract_tables(filepaths[p])
+            print(t)
             for _t in t:
                 _t.page = int(p)
             tables.extend(t)
@@ -138,7 +148,7 @@ def extract(job_id):
         job.render_files = json.dumps(render_files)
         job.is_finished = True
         job.finished_at = dt.datetime.now()
-
+        print(job.render_files)
         session.commit()
         session.close()
     except Exception as e:
